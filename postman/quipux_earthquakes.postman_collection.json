@@ -1,0 +1,82 @@
+{
+  "info": {
+    "name": "Quipux - Earthquake Events API",
+    "description": "Coleccion para la prueba tecnica de procesamiento de eventos sismicos en tiempo real (USGS + MongoDB + Airflow + FastAPI).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/health", "host": ["{{baseUrl}}"], "path": ["health"] }
+      }
+    },
+    {
+      "name": "List earthquakes (sin filtros)",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/earthquakes", "host": ["{{baseUrl}}"], "path": ["earthquakes"] }
+      }
+    },
+    {
+      "name": "List earthquakes (filtros + paginacion + orden)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/earthquakes?min_magnitude=2&max_magnitude=6&location=California&sort_by=magnitude&order=desc&page=1&page_size=20",
+          "host": ["{{baseUrl}}"],
+          "path": ["earthquakes"],
+          "query": [
+            { "key": "min_magnitude", "value": "2" },
+            { "key": "max_magnitude", "value": "6" },
+            { "key": "location", "value": "California" },
+            { "key": "sort_by", "value": "magnitude" },
+            { "key": "order", "value": "desc" },
+            { "key": "page", "value": "1" },
+            { "key": "page_size", "value": "20" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Metrics (ultima ventana disponible)",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/metrics", "host": ["{{baseUrl}}"], "path": ["metrics"] }
+      }
+    },
+    {
+      "name": "Metrics (ventana especifica)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/metrics?window=2026-06-25T14",
+          "host": ["{{baseUrl}}"],
+          "path": ["metrics"],
+          "query": [{ "key": "window", "value": "2026-06-25T14" }]
+        }
+      }
+    },
+    {
+      "name": "Reports (rango de fechas + paginacion)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/reports?start_date=2026-06-25T00:00:00Z&end_date=2026-06-26T00:00:00Z&page=1&page_size=20",
+          "host": ["{{baseUrl}}"],
+          "path": ["reports"],
+          "query": [
+            { "key": "start_date", "value": "2026-06-25T00:00:00Z" },
+            { "key": "end_date", "value": "2026-06-26T00:00:00Z" },
+            { "key": "page", "value": "1" },
+            { "key": "page_size", "value": "20" }
+          ]
+        }
+      }
+    }
+  ]
+}

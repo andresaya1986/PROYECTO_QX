@@ -1,0 +1,16 @@
+FROM apache/airflow:2.10.3-python3.12
+
+# Solo las dependencias que necesitan los DAGs para reutilizar src/services/*
+# (no se instala fastapi/uvicorn/prometheus, que son exclusivos de la API/ingesta).
+RUN pip install --no-cache-dir \
+    motor==3.6.0 \
+    pymongo==4.9.1 \
+    pydantic==2.9.2 \
+    pydantic-settings==2.5.2
+
+COPY deploy/airflow-entrypoint.sh /entrypoint.sh
+USER root
+RUN chmod +x /entrypoint.sh
+USER airflow
+
+ENTRYPOINT ["/entrypoint.sh"]

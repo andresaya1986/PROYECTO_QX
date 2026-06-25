@@ -1,0 +1,70 @@
+{
+  "title": "Quipux - Earthquakes Overview",
+  "uid": "quipux-earthquakes-overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Eventos nuevos ingeridos (tasa 5m)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        { "expr": "rate(earthquakes_ingested_total[5m])", "legendFormat": "ingeridos/s" }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Duplicados detectados (tasa 5m)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        { "expr": "rate(earthquakes_duplicates_total[5m])", "legendFormat": "duplicados/s" }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Errores de ingesta (total)",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 8 },
+      "targets": [
+        { "expr": "ingestion_errors_total", "legendFormat": "errores" }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Duracion ciclo de ingesta (p95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 18, "x": 6, "y": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(ingestion_cycle_duration_seconds_bucket[10m])) by (le))",
+          "legendFormat": "p95 segundos"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Requests HTTP API (tasa 5m)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+      "targets": [
+        { "expr": "sum by (handler) (rate(http_requests_total[5m]))", "legendFormat": "{{handler}}" }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Latencia HTTP API (p95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le, handler))",
+          "legendFormat": "{{handler}}"
+        }
+      ]
+    }
+  ]
+}
