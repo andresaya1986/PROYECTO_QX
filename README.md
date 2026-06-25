@@ -38,6 +38,19 @@ deploy/            # Dockerfiles
 | `prometheus`      | 9090   | Scrapea métricas de `api` y `ingestion` |
 | `grafana`         | 3000   | Dashboard "Quipux - Earthquakes Overview" |
 
+## Requisitos de recursos
+
+El stack levanta 7 contenedores (Mongo, ingesta, API, Postgres de Airflow, Airflow, Prometheus,
+Grafana). **Docker Desktop necesita al menos 3–4 GB de RAM asignados** (Settings → Resources →
+Memory) para correr todo sin problemas. Con el valor por defecto de Docker Desktop en algunos
+entornos (~1 GB), el webserver de Airflow puede quedarse sin memoria al iniciar (`gunicorn`
+reporta `Worker was sent SIGKILL! Perhaps out of memory?` y `/health` deja de responder). Por eso
+en este repo `AIRFLOW__WEBSERVER__WORKERS=1` y `AIRFLOW__SCHEDULER__PARSING_PROCESSES=1`
+(ver `docker-compose.yml`) — reduce el consumo de Airflow de ~290 MB a ~120 MB en reposo, pero
+sigue creciendo con el uso (scheduler + dag parsing), así que si ves ese error en
+`docker compose logs airflow`, la solución real es subir la memoria de Docker Desktop, no solo
+bajar workers.
+
 ## Cómo ejecutar
 
 1. Copiar el archivo de variables de entorno y ajustar si es necesario (no se usan credenciales hardcodeadas en el código):
